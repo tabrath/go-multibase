@@ -6,11 +6,17 @@ import (
 	"testing"
 )
 
-func TestBase58RoundTrip(t *testing.T) {
+func TestBaseRoundTrips(t *testing.T) {
+	testBaseRoundTrip(t, Base16)
+	testBaseRoundTrip(t, Base58BTC)
+	testBaseRoundTrip(t, Base58Flickr)
+}
+
+func testBaseRoundTrip(t *testing.T, base int) {
 	buf := make([]byte, 16)
 	rand.Read(buf)
 
-	enc, err := Encode(Base58BTC, buf)
+	enc, err := Encode(base, buf)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -20,7 +26,7 @@ func TestBase58RoundTrip(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	if e != Base58BTC {
+	if e != base {
 		t.Fatal("got wrong encoding out")
 	}
 

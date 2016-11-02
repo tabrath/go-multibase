@@ -23,6 +23,8 @@ func Encode(base int, data []byte) (string, error) {
 	switch base {
 	case Base58BTC:
 		return string(Base58BTC) + b58.EncodeAlphabet(data, b58.BTCAlphabet), nil
+	case Base58Flickr:
+		return string(Base58Flickr) + b58.EncodeAlphabet(data, b58.FlickrAlphabet), nil
 	case Base16:
 		return string(Base16) + hex.EncodeToString(data), nil
 	default:
@@ -38,6 +40,14 @@ func Decode(data string) (int, []byte, error) {
 	switch data[0] {
 	case Base58BTC:
 		return Base58BTC, b58.DecodeAlphabet(data[1:], b58.BTCAlphabet), nil
+	case Base58Flickr:
+		return Base58Flickr, b58.DecodeAlphabet(data[1:], b58.FlickrAlphabet), nil
+	case Base16:
+		decoded, err := hex.DecodeString(data[1:])
+		if err != nil {
+			return Base16, nil, err
+		}
+		return Base16, decoded, nil
 	default:
 		return -1, nil, ErrUnsupportedEncoding
 	}
